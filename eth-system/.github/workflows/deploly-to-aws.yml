@@ -1,0 +1,52 @@
+on:
+  push:
+    branches:
+      - test
+
+name: Deploy to Amazon ECS
+
+jobs:
+  deploy-test:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build eth-system, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY_ETH_SYSTEM: eth-system
+          IMAGE_TAG_ETH_SYSTEM: 0.1.0
+          ECR_REPOSITORY_FRONTEND: eth-system-frontend
+          IMAGE_TAG_FRONTEND: 0.1.0
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_ETH_SYSTEM:$IMAGE_TAG_ETH_SYSTEM . -f Dockerfile.eth-system
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_ETH_SYSTEM:$IMAGE_TAG_ETH_SYSTEM
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_ETH_SYSTEM:$IMAGE_TAG_ETH_SYSTEM"
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:$IMAGE_TAG_FRONTEND . -f Dockerfile.frontend
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:$IMAGE_TAG_FRONTEND
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:$IMAGE_TAG_FRONTEND"
+
+      - name: Zip EB files and push
+        run: |
+          cp docker-compose.yml.test docker-compose.yml
+          zip eth-system-dev.zip docker-compose.yml Dockerrun.aws.json .extensions
+          aws s3 cp eth-system-dev.zip s3://eth-system-test/eb/eth-system-dev.zip
