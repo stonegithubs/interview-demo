@@ -1,0 +1,25 @@
+version: '3.4'
+services:
+  eth_system:
+    image: XXXXXXXX.dkr.ecr.ap-east-1.amazonaws.com/eth-system:0.1.0
+    container_name: 'eth_system'
+    env_file:
+      - .env # 這個檔案會在aws的eb加進去
+    volumes:
+      - "${EB_LOG_BASE_DIR}/eth_system:/usr/src/app/dist/logs"
+    networks:
+      - nginx-net
+  eth_system_frontend:
+      image: XXXXXXXX.dkr.ecr.ap-east-1.amazonaws.com/eth_system-frontend:0.1.0
+      container_name: 'eth_system_frontend'
+      depends_on:
+        - eth_system
+      ports:
+        - '80:80'
+      networks:
+        - nginx-net
+      volumes:
+        - "${EB_LOG_BASE_DIR}/eth_system_frontend:/var/log/nginx"
+networks:
+  nginx-net:
+    driver: 'bridge'

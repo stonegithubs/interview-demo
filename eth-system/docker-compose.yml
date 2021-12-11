@@ -1,0 +1,60 @@
+version: '3.4'
+services:
+  eth_system:
+    image: eth-system:0.1.0
+    container_name: 'eth-system'
+    build:
+      context: .
+      dockerfile: Dockerfile.eth_system
+    ports:
+      - 5000:5000
+    depends_on:
+      - eth_system_mysql
+      - eth_system_redis
+    networks:
+      - redis-net
+      - mysql-net
+      - nginx-net
+  eth_system_redis:
+    container_name: 'eth_system_redis'
+    image: redis:6-alpine
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./redis_data:/data
+    networks:
+      - redis-net
+  eth_system_mysql:
+    image: mysql:5.7
+    container_name: 'eth_system_mysql'
+    command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_ETH_SYSTEM_USER}
+      MYSQL_PASSWORD: ${MYSQL_ETH_SYSTEM_PASSWORD}
+    ports:
+      - '3306:3306'
+    volumes:
+      - './mysql_data:/var/lib/mysql'
+    networks:
+      - mysql-net
+  eth_system_frontend:
+    image: eth-system-frontend:0.1.0
+    container_name: 'eth_system_frontend'
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    depends_on:
+      - eth_systemle
+    ports:
+      - '3000:80'
+    networks:
+      - nginx-net
+networks:
+  redis-net:
+    driver: 'bridge'
+  mysql-net:
+    driver: 'bridge'
+  nginx-net:
+    driver: 'bridge'

@@ -1,0 +1,13 @@
+.idea
+.env
+.env.dev
+dist
+!dist/.env.example
+redis_data
+node_modules
+mysql_data
+docs
+ab_test
+docker-compose.yml.dev
+docker-compose.yml.qa
+frontend

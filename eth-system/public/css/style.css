@@ -1,0 +1,138 @@
+body {
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    min-height: 700px;
+    background: rgba(230, 230, 230, .4);
+    font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.card {
+    min-height: 600px;
+    height: auto;
+    min-width: 360px;
+    width: 60vw;
+    max-width: 550px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 1px 2px 3px 2px rgba(200, 200, 200, 0.73);
+    -webkit-box-shadow: 1px 2px 3px 2px rgba(200, 200, 200, 0.73);
+    -moz-box-shadow: 1px 2px 3px 2px rgba(200, 200, 200, 0.73);
+    /*background: linear-gradient(to right, #8877f8e8, #33aeff9c);*/
+    background: rgba(0, 20, 230, .5);
+    color: white;
+    margin: 0 8px 0 8px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.card-title {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    text-align: center;
+    background: white;
+    color: black;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-img {
+    min-width: 200px;
+    min-height: 200px;
+    margin: 8px auto auto auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(white, white) left top,
+    linear-gradient(white, white) left top,
+    linear-gradient(white, white) right top,
+    linear-gradient(white, white) right top,
+    linear-gradient(white, white) right bottom,
+    linear-gradient(white, white) right bottom,
+    linear-gradient(white, white) left bottom,
+    linear-gradient(white, white) left bottom;
+    background-repeat: no-repeat;
+    background-size: 2px 20px, 20px 2px;
+    padding: 10px;
+}
+
+.card-img img {
+    width: 200px;
+    height: 200px;
+}
+
+.card-address {
+    margin: 15px 0 5px 0;
+    cursor: pointer;
+    word-break: break-word;
+    padding: 5px;
+}
+
+.card-address label {
+    cursor: pointer;
+}
+
+.card-amount {
+    margin: 5px 0 5px 0;
+    text-align: center;
+    width: 80%;
+}
+
+.card-amount div {
+    font-size: 30px;
+    font-weight: bold;
+    color: yellow;
+}
+
+.card-exchange {
+    text-align: center;
+    width: 80%;
+}
+
+.card-exchange div {
+    margin: 3px 0;
+}
+
+.card-footer {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    color: black;
+    bottom: 0;
+    background: white;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    padding: 5px 0 5px 0;
+}
+
+.orange {
+    color: orange;
+}
+
+.fz20 {
+    font-size: 20px;
+}
+
+#cp {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 450px) {
+    .card {
+        min-height: 650px;
+    }
+
+    .card-exchange .tip {
+        font-size: 16px;
+    }
+}

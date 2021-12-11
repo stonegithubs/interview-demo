@@ -1,0 +1,20 @@
+FROM node:14.17-alpine
+RUN apk add --no-cache tzdata
+ENV TZ Asia/Taipei
+RUN apk add g++ make python
+
+WORKDIR /usr/src/app
+
+COPY package.json /usr/src/app/
+COPY package-lock.json /usr/src/app/
+
+RUN npm i
+
+COPY . /usr/src/app
+
+RUN npm run build
+RUN npm run build-doc
+
+ENV PORT 5000
+EXPOSE $PORT
+CMD [ "npm", "start" ]
